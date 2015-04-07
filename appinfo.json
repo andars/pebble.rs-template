@@ -1,0 +1,19 @@
+{
+  "uuid": "a5be1daa-a6a2-4d30-ba20-e0761e43f2d3",
+  "shortName": "pebble-rust",
+  "longName": "pebble-rust",
+  "companyName": "Foote Forward",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}

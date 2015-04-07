@@ -1,0 +1,9 @@
+[package]
+name = "pebble-rust"
+version = "0.0.1"
+authors = ["andars <afoote97@gmail.com>"]
+
+[dependencies]
+
+[dependencies.pebble]
+path = "../pebble-rs"
