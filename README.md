@@ -14,3 +14,7 @@ Don't be fooled by the Cargo.toml, building is actually accomplished with
 dependencies.
 
 *This is very much a work in progress*
+
+###Screenshots
+![screenshot1](screenshot1.png)
+![screenshot2](screenshot2.png)
