@@ -1,18 +1,17 @@
 #![crate_type="staticlib"]
 #![feature(intrinsics)]
 #![feature(no_std)]
-#![feature(core)]
 #![feature(lang_items)]
 #![feature(link_args)]
+
 #![no_std]
 
 extern crate pebble;
 
-
 use pebble::{GPoint,GSize,GRect,ClickRecognizer,TextLayer,Window,WindowHandlers};
 
 extern fn select_handler(_: *mut ClickRecognizer, layer: *mut TextLayer) {
-    pebble::text_layer_set_text(layer, "WOW IT WORKED!\0");
+    pebble::text_layer_set_text(layer, "Rust is running!\0");
 }
 
 extern fn click_config_provider(_: *mut TextLayer) {
@@ -23,8 +22,14 @@ extern fn window_load_handler(window: *mut Window) {
     let window_layer = pebble::window_get_root_layer(window);
     let window_bounds = pebble::layer_get_bounds(window_layer);
 
+    let bitmap = pebble::gbitmap_create_with_resource(1);
+    let bitmap_layer = pebble::bitmap_layer_create(window_bounds);
+    pebble::bitmap_layer_set_bitmap(bitmap_layer, bitmap);
+    pebble::bitmap_layer_set_compositing_mode(bitmap_layer, pebble::GCompOp::GCompOpAssign);
+    pebble::layer_add_child(window_layer, pebble::bitmap_layer_get_layer(bitmap_layer));
+
     let text_bounds = GRect {
-    origin: GPoint { x: 0, y: 72 },
+    origin: GPoint { x: 0, y: 100 },
     size: GSize { w: window_bounds.size.w, h: 20 }
     };
     let text_layer = pebble::text_layer_create(text_bounds);
