@@ -8,36 +8,57 @@
 
 extern crate pebble;
 
-use pebble::{GPoint,GSize,GRect,ClickRecognizer,TextLayer,Window,WindowHandlers};
+use pebble::types::{GPoint,GSize,GRect,ClickRecognizer,Window,WindowHandlers};
+use pebble::types;
+use pebble::raw;
+use pebble::Layer;
 
-extern fn select_handler(_: *mut ClickRecognizer, layer: *mut TextLayer) {
-    pebble::text_layer_set_text(layer, "Rust is running!\0");
+extern fn select_handler(_: *mut ClickRecognizer, layer: *mut types::TextLayer) {
+    //raw::text_layer_set_text(layer, "Rust is running!\0");
+    let text_layer = pebble::TextLayer::new_from(layer);
+    text_layer.set_text("Rust is running!\0");
 }
 
-extern fn click_config_provider(_: *mut TextLayer) {
-    pebble::window_single_click_subscribe(2, select_handler);
+extern fn click_config_provider(_: *mut types::TextLayer) {
+    raw::window_single_click_subscribe(2, select_handler);
 }
 
 extern fn window_load_handler(window: *mut Window) {
-    let window_layer = pebble::window_get_root_layer(window);
-    let window_bounds = pebble::layer_get_bounds(window_layer);
+    let window_layer = raw::window_get_root_layer(window);
+    let window_bounds = raw::layer_get_bounds(window_layer);
 
-    let bitmap = pebble::gbitmap_create_with_resource(1);
-    let bitmap_layer = pebble::bitmap_layer_create(window_bounds);
-    pebble::bitmap_layer_set_bitmap(bitmap_layer, bitmap);
-    pebble::bitmap_layer_set_compositing_mode(bitmap_layer, pebble::GCompOp::GCompOpAssign);
-    pebble::layer_add_child(window_layer, pebble::bitmap_layer_get_layer(bitmap_layer));
+
+    //let bitmap = raw::gbitmap_create_with_resource(1);
+    let bitmap = pebble::Bitmap::new(1);
+
+    //let bitmap_layer = raw::bitmap_layer_create(window_bounds);
+    let bitmap_layer = pebble::BitmapLayer::new(window_bounds);
+
+    //raw::bitmap_layer_set_bitmap(bitmap_layer, bitmap);
+    bitmap_layer.set_bitmap(&bitmap);
+
+    //raw::bitmap_layer_set_compositing_mode(bitmap_layer, types::GCompOp::GCompOpAssign);
+    bitmap_layer.set_compositing_mode(types::GCompOp::GCompOpAssign);
+
+    //raw::layer_add_child(window_layer, raw::bitmap_layer_get_layer(bitmap_layer));
+    raw::layer_add_child(window_layer, bitmap_layer.get_layer());
 
     let text_bounds = GRect {
-    origin: GPoint { x: 0, y: 100 },
-    size: GSize { w: window_bounds.size.w, h: 20 }
+        origin: GPoint { x: 0, y: 100 },
+        size: GSize { w: window_bounds.size.w, h: 20 }
     };
-    let text_layer = pebble::text_layer_create(text_bounds);
+    
+    //let text_layer = raw::text_layer_create(text_bounds);
+    let text_layer = pebble::TextLayer::new(text_bounds);
 
-    pebble::text_layer_set_text(text_layer, "Press a button\0");
-    pebble::layer_add_child(window_layer, pebble::text_layer_get_layer(text_layer));
+    //raw::text_layer_set_text(text_layer, "Press a button\0");
+    text_layer.set_text("Press a button\0");
 
-    pebble::window_set_click_config_provider_with_context(window, click_config_provider, text_layer); 
+    //raw::layer_add_child(window_layer, raw::text_layer_get_layer(text_layer));
+    raw::layer_add_child(window_layer, text_layer.get_layer());
+
+    raw::window_set_click_config_provider_with_context(window, click_config_provider,
+                                                       text_layer.get_raw()); 
 }
 
 extern fn window_unload_handler(window: *mut Window) {
@@ -48,26 +69,26 @@ extern fn window_disappear_handler(window: *mut Window) {
 }
 
 fn init() -> *mut Window{
-    let window = pebble::window_create();
+    let window = raw::window_create();
 
-    pebble::window_set_window_handlers(window, WindowHandlers {
+    raw::window_set_window_handlers(window, WindowHandlers {
         load: window_load_handler,
         appear: window_appear_handler,
         disappear: window_disappear_handler,
         unload: window_unload_handler,
     });
 
-    pebble::window_stack_push(window, false);
+    raw::window_stack_push(window, false);
     window
 }
 
 fn deinit(window: *mut Window) {
-    pebble::window_destroy(window);
+    raw::window_destroy(window);
 }
 
 #[no_mangle]
 pub extern fn main() {
     let window = init();
-    pebble::app_event_loop();
+    raw::app_event_loop();
     deinit(window);
 }
