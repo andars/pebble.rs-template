@@ -14,7 +14,6 @@ use pebble::raw;
 use pebble::Layer;
 
 extern fn select_handler(_: *mut ClickRecognizer, layer: *mut types::TextLayer) {
-    //raw::text_layer_set_text(layer, "Rust is running!\0");
     let text_layer = pebble::TextLayer::new_from(layer);
     text_layer.set_text("Rust is running!\0");
 }
@@ -27,20 +26,13 @@ extern fn window_load_handler(window: *mut Window) {
     let window_layer = raw::window_get_root_layer(window);
     let window_bounds = raw::layer_get_bounds(window_layer);
 
-
-    //let bitmap = raw::gbitmap_create_with_resource(1);
     let bitmap = pebble::Bitmap::new(1);
 
-    //let bitmap_layer = raw::bitmap_layer_create(window_bounds);
     let bitmap_layer = pebble::BitmapLayer::new(window_bounds);
 
-    //raw::bitmap_layer_set_bitmap(bitmap_layer, bitmap);
     bitmap_layer.set_bitmap(&bitmap);
-
-    //raw::bitmap_layer_set_compositing_mode(bitmap_layer, types::GCompOp::GCompOpAssign);
     bitmap_layer.set_compositing_mode(types::GCompOp::GCompOpAssign);
 
-    //raw::layer_add_child(window_layer, raw::bitmap_layer_get_layer(bitmap_layer));
     raw::layer_add_child(window_layer, bitmap_layer.get_layer());
 
     let text_bounds = GRect {
@@ -48,15 +40,11 @@ extern fn window_load_handler(window: *mut Window) {
         size: GSize { w: window_bounds.size.w, h: 20 }
     };
     
-    //let text_layer = raw::text_layer_create(text_bounds);
     let text_layer = pebble::TextLayer::new(text_bounds);
 
-    //raw::text_layer_set_text(text_layer, "Press a button\0");
     text_layer.set_text("Press a button\0");
 
-    //raw::layer_add_child(window_layer, raw::text_layer_get_layer(text_layer));
     raw::layer_add_child(window_layer, text_layer.get_layer());
-
     raw::window_set_click_config_provider_with_context(window, click_config_provider,
                                                        text_layer.get_raw()); 
 }
