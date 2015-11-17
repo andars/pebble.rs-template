@@ -18,3 +18,19 @@ dependencies.
 ###Screenshots
 ![screenshot1](screenshot1.png)
 ![screenshot2](screenshot2.png)
+
+
+##So umm...
+
+If I were to express my thoughts about this project in pictures, I would have
+to go with these two.
+
+![electrical](http://binscorner.com/mails/f/fwd-no-problem-there-i-fixed-it/part-008.jpeg)
+![shed](https://i.chzbgr.com/full/7130164992/h5196C5AA/)
+
+It started out with good intentions, and it is slowly growing more and more
+fragile. This is due to the fact that I wanted to keep using Pebble's waf
+infrastructure and existing build process, which requires linking in all the
+object files separately. It does work, but if you can think of a better method
+please do let me know.
+
