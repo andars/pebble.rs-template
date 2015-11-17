@@ -3,15 +3,19 @@
 #![feature(no_std)]
 #![feature(lang_items)]
 #![feature(link_args)]
+#![feature(alloc)]
 
 #![no_std]
 
+
 extern crate pebble;
+extern crate alloc;
 
 use pebble::types::{GPoint,GSize,GRect,ClickRecognizer,Window,WindowHandlers};
 use pebble::types;
 use pebble::raw;
 use pebble::Layer;
+use alloc::boxed::Box;
 
 extern fn select_handler(_: *mut ClickRecognizer, layer: *mut types::TextLayer) {
     let text_layer = pebble::TextLayer::new_from(layer);
@@ -76,6 +80,7 @@ fn deinit(window: *mut Window) {
 
 #[no_mangle]
 pub extern fn main() {
+    let a = Box::new(5);
     let window = init();
     raw::app_event_loop();
     deinit(window);

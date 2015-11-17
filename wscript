@@ -46,7 +46,7 @@ def build(ctx):
 
         #Wish this could be in configure, but LINKFLAGS gets reset between aplite & basalt
         os.chdir('build')
-        ctx.env.LINKFLAGS += glob.glob('../target/arm-none-eabi/release/deps/pebble*.o')
+        ctx.env.LINKFLAGS += glob.glob('../target/arm-none-eabi/release/deps/*.o')
         os.chdir('..')
         
         ctx.pbl_program(source=ctx.path.ant_glob('src/(*.c|main.rs)'),
